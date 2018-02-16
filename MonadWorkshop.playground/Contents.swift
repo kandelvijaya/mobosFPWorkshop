@@ -197,14 +197,27 @@ func d(_ a:Int) -> Result<Int> {
 // f == T -> Result<U>
 // d(12).flatMap(f)  :: Result<U>
 
+func flat<T>(_ input: Result<Result<T>>) -> Result<T> {
+    switch input {
+    case let .success(v):
+        return v
+    case let .failure(e):
+        return .failure(e)
+    }
+}
+
+
 func flatMap<T, U>(_ input: Result<T>,
             _ function: ((T) -> Result<U>)) -> Result<U> {
-
+    let x = input.map(function)
+    return flat(x)
 }
 
 
 let step1 = d(12)
-let step2 = d(step1)
+let intermediate: Result<Result<Int>> = step1.map(d)
+
+
 
 
 
