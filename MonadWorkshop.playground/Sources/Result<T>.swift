@@ -52,3 +52,17 @@ public extension Result {
     }
 
 }
+
+// Applicative functor 
+public extension Result {
+
+    public static func applic<U>(_ transformFunctor: Result<((T) -> U)>, onFunctor: Result<T>) -> Result<U> {
+        switch transformFunctor {
+        case let .success(partialFunction):
+            return onFunctor.map(partialFunction)
+        case let .failure(e):
+            return .failure(e)
+        }
+    }
+
+}

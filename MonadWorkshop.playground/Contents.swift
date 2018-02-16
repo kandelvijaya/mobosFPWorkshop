@@ -107,3 +107,24 @@ applic(boxedFunctionResult, with: Result.success(13))
 
 // map    :: (A -> B)           -> Functor A -> Functor B
 // applic :: Functor (A -> B)   -> Functor A -> Functor B
+
+
+// add3 :: Int -> Int -> Int -> Int
+func add3(_ a: Int) -> (Int) -> (Int) -> Int {
+    return { b in
+        return { c in
+            return a + b + c
+        }
+    }
+}
+
+
+
+let partialResult3 = Result.success(add3)
+
+let level1Applic = Result.applic(partialResult3, onFunctor: Result.success(12))
+let level2Applic = Result.applic(level1Applic, onFunctor: Result.success(13))
+let level3Applic = Result.applic(level2Applic, onFunctor: Result.success(14))
+
+
+
