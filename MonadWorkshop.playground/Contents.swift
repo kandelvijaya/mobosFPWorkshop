@@ -2,3 +2,5 @@
 
 import UIKit
 
+let result1 = Result<Int>.success(1)
+
