@@ -128,3 +128,61 @@ let level3Applic = Result.applic(level2Applic, onFunctor: Result.success(14))
 
 
 
+
+
+
+
+
+/// 3. Monad
+/// Computation with Context
+/// Result<Int> means there might be a result or error
+/// Optional<Wrapped> means there might be something or nothing
+/// So whats the fuss?
+/// Back to composing simple functions:
+
+/// Say we have Functor<A> and we have another function that
+/// takes a concrete value and returns Functor
+/// i.e. A -> Functor<B>
+/// How can we compose these without losing context?
+
+// bind :: F<A> -> (A -> F<B>) -> F<B>
+// bind :: M<A> -> (A -> M<B>) -> M<B> where M represents Monad
+// Remeber we need to presver context as we compose!!
+
+
+/// Just to recap:
+/// Functor dealt with mapping      (A -> B) -> F<A> -> F<B>
+/// Applicative dealth with        F(A -> B) -> F<A> -> F<B>
+/// Monad deals with               (A -> F<B>) -> F<A> -> F<B>
+///
+/// Interesting to note            (B -> F<A>) -> F<A> -> F<B>
+/// is a function we didnt talk. Its because types dont align and there
+/// is no direct composition.
+/// Note in monad the order of transform and context is reversed in haskell.
+
+
+
+// Partial fmap
+func fmap<U,V>(_ transform: @escaping ((U) -> V)) -> (Result<U>) -> Result<V> {
+    return { b in
+        return b.map(transform)
+    }
+}
+
+let partialFmap = fmap(mult5)
+partialFmap(Result.success(5))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
