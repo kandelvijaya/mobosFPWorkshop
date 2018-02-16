@@ -64,11 +64,45 @@ func countOccuranceOfFunctor(_ string: String) -> Int {
 }
 
 let y = data.then { $0.flatMap(dataToString) }
+
 let z = y.then { $0.map(countOccuranceOfFunctor) }.then {
     print($0)
 }
 
-z.execute()
+
+func extractURL(_ string: String) -> Result<URL> {
+    return .success(URL(string: "www.objc.io")!)
+}
+
+let copiedY = y
+let futureY = copiedY.then{ $0.flatMap(extractURL) }.bind {
+    return NetworkService().get(from: URL(string: "www.objc.io")!)
+}
+futureY.then({ $0.flatMap(dataToString) }).then {
+    print($0)
+}
+
+
+precedencegroup BindPrecedence {
+    higherThan: BitwiseShiftPrecedence
+    associativity: left
+}
+infix operator >>=: BindPrecedence
+
+public func >>= <T,U>(_ lhs: Result<T>, _ rhsFunc: ((T) -> Result<U>)) -> Result<U> {
+    return lhs.flatMap(rhsFunc)
+}
+
+let res12 = Result.success(12)
+
+func addO(_ a: Int) -> Result<Int> {
+    return .success(a + 12)
+}
+
+res12 >>= addO >>= addO
+
+
+
 
 
 
