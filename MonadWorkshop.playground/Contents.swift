@@ -174,10 +174,37 @@ partialFmap(Result.success(5))
 
 
 
+enum MathError: Error {
+    case cannotDivideByZero
+}
+func d(_ a:Int) -> Result<Int> {
+    let r = Int(arc4random_uniform(5))
+    if r == 0 { return .failure(MathError.cannotDivideByZero)}
+    return .success(a / r)
+}
+
+// Result<T>
+// T -> U
+// Result<U>
+
+// Result<T>
+// T -> Result<U>
 
 
+// Result<T> -> (T -> Result<U>) -> Result<U>
 
 
+// f == T -> Result<U>
+// d(12).flatMap(f)  :: Result<U>
+
+func flatMap<T, U>(_ input: Result<T>,
+            _ function: ((T) -> Result<U>)) -> Result<U> {
+
+}
+
+
+let step1 = d(12)
+let step2 = d(step1)
 
 
 
